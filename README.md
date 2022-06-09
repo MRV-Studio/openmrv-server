@@ -12,6 +12,11 @@
 sudo mkdir /var/log/openmrv-server
 sudo chown -R $USER.$USER /var/log/openmrv-server
 ```
+## .env:
+```sh
+cp .env.sample .env
+# provide appropriate values in .env
+```
 ## load base test data:
 ```sh
 npm i
