@@ -18,7 +18,7 @@ mongo.connectToTheDatabase().then(() => {
   console.log(`database connected`);
 });
 
-const testprovider: IProvider = { name: 'Test Provider' };
+const testprovider: IProvider = { name: 'Test Provider', path: '4818b0' };
 
 const roles = [
   { role: 'user' },

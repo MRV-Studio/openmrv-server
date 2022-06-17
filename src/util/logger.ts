@@ -1,5 +1,5 @@
 import { createLogger, format, transports } from 'winston';
-import { LOG_PATH } from './common';
+import { LOG_PATH } from './constants';
 
 const {combine, timestamp , prettyPrint } = format;
 const logger = createLogger({

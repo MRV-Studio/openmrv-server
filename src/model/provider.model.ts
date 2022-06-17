@@ -9,6 +9,7 @@ const providerSchema: mongoose.Schema<IProvider> = new mongoose.Schema(
       default: () => nanoid()
     },
     name: { type: String, unique: true },
+    path: { type: String, unique: true },
   },
   {
     toJSON: {

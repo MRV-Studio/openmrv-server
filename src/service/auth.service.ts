@@ -49,7 +49,6 @@ class AuthService {
     const secret = process.env.JWT_SECRET;
     const dataStoredInToken: DataStoredInToken = {
       _id: user._id,
-      provider: user.provider.name,
     };
     return {
       expiresIn,

@@ -21,7 +21,7 @@ mongo.connectToTheDatabase().then(() => {
 
 let authService: AuthService;
 
-const testprovider: IProvider = { name: 'Test Provider' };
+const testprovider: IProvider = { name: 'Test Provider', path: '4818b0' };
 
 describe('Users and Roles', () => {
   before(done => {

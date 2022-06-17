@@ -29,8 +29,7 @@ export const app = new HttpApp(
   ],
 );
 
-const testprovider: IProvider = { name: 'Test Provider' };
-
+const testprovider: IProvider = { name: 'Test Provider', path: '4818b0' };
 const USER_API = `http://localhost:3000/api/${USER_PATH}`;
 
 describe('Users', () => {
@@ -84,7 +83,6 @@ describe('Users', () => {
       const res = await request(USER_API).get(`/${ID_PATH}/${user1._id}`).set({ 'x-access-token': [token.token] });
       expect(res.status).to.equal(401);
       expect(res.body.message).to.equal('Expired authentication token, please login');
-
     });
 
     it('should return User with token.id === request.id', async () => {

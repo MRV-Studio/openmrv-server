@@ -5,7 +5,7 @@ import cors from 'cors';
 import Controller from './interface/controller.interface';
 import errorMiddleware from './middleware/error.middleware';
 import http from 'http';
-import { LOG_PATH } from './util/common';
+import { LOG_PATH } from './util/constants';
 
 class HttpApp {
   public app: express.Application;
