@@ -21,7 +21,7 @@ async function authMiddleware(request: RequestWithUser, response: Response, next
     try {
       const verificationResponse = jwt.verify(token.toString(), process.env.JWT_SECRET) as DataStoredInToken;
       const id = verificationResponse._id;
-      const user: IUser = await userModel.findById(id, '-password').populate('roles', '-_id -__v');
+      const user: IUser = await userModel.findById(id, '-password').populate('roles', '-_id -__v').populate('provider', '-_id -__v');
       if (user && authService.hasRole(user, authService.roleUser)) {
         if (!user.enabled) {
           logger.log({ level: 'warn', message: `login attempt by disabled user: ${user.email}` });
