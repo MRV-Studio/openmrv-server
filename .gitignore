@@ -2,3 +2,4 @@
 /dist
 .env
 README.local.md
+src/test/prod.base.data.ts
