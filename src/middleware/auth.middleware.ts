@@ -16,12 +16,11 @@ authService.init();
 // checks for valid token, user enabled w/ userRole
 async function authMiddleware(request: RequestWithUser, response: Response, next: NextFunction): Promise<void> {
   const token = request.headers['x-access-token'];
-
   if (token) {
     try {
       const verificationResponse = jwt.verify(token.toString(), process.env.JWT_SECRET) as DataStoredInToken;
       const id = verificationResponse._id;
-      const user: IUser = await userModel.findById(id, '-password').populate('roles', '-_id -__v').populate('provider', '-_id -__v');
+      const user: IUser = await userModel.findById(id, '-password').populate('roles', '-_id -__v').populate('provider', '-__v');
       if (user && authService.hasRole(user, authService.roleUser)) {
         if (!user.enabled) {
           logger.log({ level: 'warn', message: `login attempt by disabled user: ${user.email}` });
@@ -35,7 +34,7 @@ async function authMiddleware(request: RequestWithUser, response: Response, next
         next(new UserNotFoundException(id));
       }
     } catch (error) {
-      logger.log({ level: 'warn', message: `token verify failed: ${request.originalUrl}` });
+      logger.log({ level: 'warn', message: `token verify failed: ${request.originalUrl}, message: ${error.message}` });
       next(new WrongAuthenticationTokenException());
     }
   } else {

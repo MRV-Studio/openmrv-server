@@ -4,6 +4,7 @@ import IProvider from '../interface/provider.interface';
 import userModel from '../model/user.model';
 import roleModel from '../model/role.model';
 import providerModel from '../model/provider.model';
+import geotsModel from '../model/geots.model';
 import AuthService from '../service/auth.service';
 import validateEnv from '../util/validateEnv';
 import dotenv from 'dotenv';
@@ -30,6 +31,9 @@ const roles = [
 describe('Test Provider, Role and User Data', () => {
   beforeEach(done => {
     providerModel.deleteMany({}, err => {
+      console.log(err);
+    });
+    geotsModel.deleteMany({}, err => {
       console.log(err);
     });
     roleModel.deleteMany({}, err => {

@@ -12,6 +12,7 @@ import IPoint from '../interface/point.interface';
 import IMetadata from '../interface/metadata.interface';
 import geotsModel from '../model/geots.model';
 import IPolygon from '../interface/polygon.interface';
+import IMeasurement from '../interface/measurement.interface';
 
 process.env.NODE_ENV = 'test';
 dotenv.config();
@@ -50,7 +51,7 @@ describe('Geo', () => {
       provider = await providerModel.findOne({ name: testprovider.name });
 
       const metadata: IMetadata = { model: 'mri-esm2-ssp126', project_id: 'proj_29lo8RFQiVowh4u5WHdbFSLKExL', source: 'station xxxxx' };
-      const point: IPoint = { type: 'Point', coordinates: [-54.85791380261676, -3.555281316044591] };
+      const point: IPoint = { type: 'Point', coordinates: [-73.91320, 40.68405] };
 
       const polygon: IPolygon = {
         type: 'Polygon', coordinates: [[
@@ -76,11 +77,14 @@ describe('Geo', () => {
       const test = await geopoly.save();
       expect(test.ts).to.equal(geopoly.ts);
 
+      const m1: IMeasurement = { type: 'Temperature', unit: 'Celsius', value: 20 };
+      const m2: IMeasurement = { type: 'Humidity', unit: 'Percent', value: 30 };
       const geots = new geotsModel({
         metadata: metadata,
         provider: provider,
         location: point,
-        ts: new Date()
+        ts: new Date(),
+        measurements: [m1, m2],
       });
       const test1 = await geots.save();
       expect(test1.ts).to.equal(geots.ts);

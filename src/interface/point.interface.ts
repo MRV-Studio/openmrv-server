@@ -1,5 +1,6 @@
 interface IPoint {
   type: string;
+  // lon, lat
   coordinates: number[];
 }
 

@@ -6,10 +6,12 @@ import IUser from '../interface/user.interface';
 import IRole from '../interface/role.interface';
 import userModel from '../model/user.model';
 import roleModel from '../model/role.model';
+import providerModel from '../model/provider.model';
 import logger from '../util/logger';
 
 class AuthService {
   private userModel = userModel;
+  private providerModel = providerModel;
 
   public userRole = 'user';
   public adminRole = 'admin';
@@ -26,6 +28,8 @@ class AuthService {
     this.roleAdmin = await roleModel.findOne({ role: this.adminRole });
     this.roleSuper = await roleModel.findOne({ role: this.superRole });
     this.roleValidator = await roleModel.findOne({ role: this.validatorRole });
+    // must register provider model for auth.middleware provider populate
+    await this.providerModel.find({});
   }
 
   public async register(userData: IUser) {
@@ -51,7 +55,7 @@ class AuthService {
       _id: user._id,
     };
     return {
-      expiresIn,
+      expiresIn,      
       token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
     };
   }

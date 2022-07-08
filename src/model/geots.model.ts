@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import IAtmos from '../interface/atmos.interface';
 import { nanoid } from 'nanoid';
+import measurementSchema from './measurement.model';
 
 const pointSchema = new mongoose.Schema({
   type: {
@@ -30,18 +31,26 @@ const geotsSchema: mongoose.Schema<IAtmos> = new mongoose.Schema(
     location: {
       type: pointSchema,
       required: true
-    }
+    },
+    measurements: [measurementSchema],
   },
   {
-    timeseries: {
-      timeField: 'ts',
-      metaField: 'metadata',
-      granularity: 'hours'
+    toJSON: {
+      getters: true,
     },
-  }
+    id: false,
+  },
+  // pending 6.1
+  // {
+  //   timeseries: {
+  //     timeField: 'ts',
+  //     metaField: 'metadata',
+  //     granularity: 'hours'
+  //   },
+  // }
 );
-
-geotsSchema.index({ location: '2dsphere', ts: 1 });
+geotsSchema.index({ location: '2dsphere' });
+// geotsSchema.index({ location: '2dsphere', ts: 1 });
 
 const atmosModel = mongoose.model<IAtmos>('Geots', geotsSchema);
 

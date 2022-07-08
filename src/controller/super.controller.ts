@@ -88,4 +88,5 @@ class SuperController implements Controller {
     return res.status(200).json(user);
   }
 }
+
 export default SuperController;

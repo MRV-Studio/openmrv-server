@@ -22,8 +22,8 @@ class AdminController implements Controller {
   }
 
   private ingest = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    console.log(`request: ${JSON.stringify(req.body)}`);
     const data: IAtmos = req.body;
+    data.provider = req.user.provider;
     const ret = await this.ingestService.create(data)
       .catch((error: string) => {
         next(new HttpException(400, error));
@@ -31,4 +31,5 @@ class AdminController implements Controller {
     res.status(200).json(ret);
   }
 }
+
 export default AdminController;
