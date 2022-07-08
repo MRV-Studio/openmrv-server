@@ -4,3 +4,4 @@
 README.local.md
 src/test/prod.base.data.ts
 .vscode
+data/provider
