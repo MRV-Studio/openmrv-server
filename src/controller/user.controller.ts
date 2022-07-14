@@ -38,6 +38,9 @@ class UserController implements Controller {
 
   private getNearMeasurements = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     const { lon, lat, min, max }: INearQueryParams = req.query as unknown as INearQueryParams;
+    if (!lon || !lat || !min || !max || lon < -180 || lon > 180 || lat < -90 || lat > 90 || min < 0 || max < 0) {
+      return next(new HttpException(400, 'Invalid query parameters'));
+    }
     const measurements = await this.geotsModel.find(
       {
         "provider": req.user.provider._id,
