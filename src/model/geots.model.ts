@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import { Model, Schema, model } from 'mongoose'
 import IAtmos from '../interface/atmos.interface';
 import { nanoid } from 'nanoid';
 import measurementSchema from './measurement.model';
 
-const pointSchema = new mongoose.Schema({
+const pointSchema = new Schema({
   type: {
     type: String,
     enum: ['Point'],
@@ -16,7 +16,11 @@ const pointSchema = new mongoose.Schema({
 },
 { _id: false });
 
-const geotsSchema: mongoose.Schema<IAtmos> = new mongoose.Schema(
+interface IAtmosMethods {
+  getAnchorables(): IAtmos[];
+}
+type AtmosModel = Model<IAtmos, IAtmosMethods>;
+const geotsSchema: Schema<IAtmos, AtmosModel, IAtmosMethods> = new Schema(
   {
     _id: {
       'type': String,
@@ -26,13 +30,18 @@ const geotsSchema: mongoose.Schema<IAtmos> = new mongoose.Schema(
       type: String,
       ref: "Provider",
     },
-    metadata: { type: mongoose.Schema.Types.Mixed },
+    metadata: { type: Schema.Types.Mixed },
     ts: Date,
     location: {
       type: pointSchema,
       required: true
     },
     measurements: [measurementSchema],
+    hash: { type: String, required: true },
+    anchor: {
+      type: String,
+      ref: "Anchor",
+    },
   },
   {
     toJSON: {
@@ -49,9 +58,15 @@ const geotsSchema: mongoose.Schema<IAtmos> = new mongoose.Schema(
   //   },
   // }
 );
+
+// WIP
+geotsSchema.method('getAnchorables', function getAnchorables() {
+  return this.find({"anchor": null}).sort({ ts: -1, _id: 1 })
+});
+
 geotsSchema.index({ location: '2dsphere' });
 // geotsSchema.index({ location: '2dsphere', ts: 1 });
 
-const atmosModel = mongoose.model<IAtmos>('Geots', geotsSchema);
+const atmosModel = model<IAtmos, AtmosModel>('Geots', geotsSchema);
 
 export default atmosModel;

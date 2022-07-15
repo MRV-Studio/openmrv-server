@@ -85,6 +85,7 @@ describe('Geo', () => {
         location: point,
         ts: new Date(),
         measurements: [m1, m2],
+        hash: 'hash',
       });
       const test1 = await geots.save();
       expect(test1.ts).to.equal(geots.ts);

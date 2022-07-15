@@ -14,11 +14,9 @@ export interface IUserMongo extends IUser, mongoose.Document {
   password?: string;
   roles: IRole[];
   enabled: boolean;
-  // adding this signature, specific to mongo
-  comparePassword(candidatePassword: string, next: (err: Error | null, same: boolean | null) => void): void;
 }
 
-const userSchema: mongoose.Schema<IUserMongo> = new mongoose.Schema(
+const userSchema: mongoose.Schema<IUser> = new mongoose.Schema(
   {
     _id: {
       'type': String,
@@ -68,18 +66,6 @@ userSchema.pre('save', function (this: IUserMongo, next: (err?: Error | undefine
     }
   });
 });
-
-userSchema.methods.comparePassword = function (
-  candidatePassword: string,
-  next: (err: Error | null, same: boolean | null) => void,
-) {
-  bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-    if (err) {
-      return next(err, null);
-    }
-    next(null, isMatch);
-  });
-};
 
 // Omit the password when returning a user
 userSchema.set('toJSON', {

@@ -27,6 +27,7 @@ export enum Units {
   Degrees = 'Degrees',
   Percent = 'Percent',
   Value = 'Value',
+  Inches = 'Inches',
 }
 
 const measurementSchema = new mongoose.Schema<IMeasurement>({
