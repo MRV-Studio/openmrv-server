@@ -1,0 +1,7 @@
+{
+    "_id": "$objectid",
+    "metadata": { "model": "mri-esm2-ssp126", "project_id": "proj_29lo8RFQiVowh4u5WHdbFSLKExL", "source": {"$choose": {"from": ["Station1", "Station2", "Station3"]}} },
+    "ts": "$now",
+    "location": {"$point": {"lat_lim": [40, 41], "long_lim": [-74, -73]}},
+    "measurements": {"$array": {"of": {"measurement": {"$choose": {"from": ["Temperature", "Humidity", "Pressure"]}}, "unit": {"$choose": {"from": ["Celsius", "Percent", "Fahrenheit"]}}, "value": {"$numberDecimal": {"min": 1, "max": 100}}}, "number": 3}}
+}

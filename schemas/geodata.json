@@ -1,6 +1,6 @@
 {
     "_id": "$objectid",
-    "account": "$objectid",
+    "provider": "$objectid",
     "location": {"$geometries": {"types": ["Point", "Polygon"], "lat_lim": [40, 41], "long_lim": [-74, -73], "number": 1}},
     "geotype": {"$choose": {"from": ["Wind"]}},
     "value": {"$numberDecimal": {"min": 0, "max": 100}},
