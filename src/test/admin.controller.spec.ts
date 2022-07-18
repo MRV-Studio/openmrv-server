@@ -122,7 +122,7 @@ describe('Users', () => {
       expect(queryResponse[0].measurements[1].value).to.equal(m2.value);
       expect(queryResponse[0].hash.length).to.equal(64);
 
-      res = await request(ADMIN_API).post(`/${ANCHOR_PATH}`).set({ 'x-access-token': [adminToken.token] });
+      res = await request(ADMIN_API).post(`/${ANCHOR_PATH}`).set({ 'x-access-token': [adminToken.token] }).send({limit: 100});
       expect(res.status).to.equal(200);
       const anchorResponse: IAnchor = res.body.anchor;
       expect(anchorResponse.hash.length).to.equal(64);

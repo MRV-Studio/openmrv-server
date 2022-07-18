@@ -47,7 +47,10 @@ class AdminController implements Controller {
   }
 
   private anchor = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    const ret = await this.anchorService.anchor(req.user.provider)
+    if (!req.body.limit || isNaN(+req.body.limit) || req.body.limit < 1) {
+      return next(new HttpException(400, 'Invalid Limit'));
+    }
+    const ret = await this.anchorService.anchor(req.user.provider, req.body.limit)
       .catch((error: string) => {
         next(new HttpException(400, error));
       });
