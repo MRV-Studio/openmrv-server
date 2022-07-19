@@ -10,7 +10,7 @@ import AnchorService from '../service/anchor.service';
 import IAtmos from '../interface/atmos.interface';
 import { nanoid } from 'nanoid';
 import { Keccak } from 'sha3'
-import { ANCHOR_LIMIT } from '../util/constants';
+import { ANCHOR_LIMIT_MAX } from '../util/constants';
 
 class AdminController implements Controller {
   public path = `/${ADMIN_PATH}`;
@@ -48,8 +48,8 @@ class AdminController implements Controller {
   }
 
   private anchor = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    if (!req.body.limit || isNaN(+req.body.limit) || req.body.limit < 1 || req.body.limit > ANCHOR_LIMIT) {
-      return next(new HttpException(400, 'Invalid Limit'));
+    if (!req.body.limit || isNaN(+req.body.limit) || req.body.limit < 1 || req.body.limit > ANCHOR_LIMIT_MAX) {
+      return next(new HttpException(400, `Limit must be between 1 - ${ANCHOR_LIMIT_MAX}`));
     }
     const ret = await this.anchorService.anchor(req.user.provider, req.body.limit)
       .catch((error: string) => {
