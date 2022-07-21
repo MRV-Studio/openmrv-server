@@ -6,6 +6,7 @@ function validateEnv(): void {
     MONGODB_URI: str(),
     JWT_SECRET: str(),
     PORT: port(),
+    CELO_LOCAL_TESTNET_PRIVKEY: str(),
   });
 }
 

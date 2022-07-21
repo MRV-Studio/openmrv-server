@@ -4,7 +4,8 @@ interface IAnchor {
   _id?: string;
   provider?: IProvider;
   hash?: string;
-  transaction_id?: string;
+  transaction_hash?: string;
+  count?: number;
 }
 
 export default IAnchor;

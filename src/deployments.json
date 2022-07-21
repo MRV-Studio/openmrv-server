@@ -1,0 +1,33 @@
+{
+  "31337": [
+    {
+      "name": "localhost",
+      "chainId": "31337",
+      "contracts": {
+        "GeodataAnchor": {
+          "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "string",
+                  "name": "_id",
+                  "type": "string"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "_hash",
+                  "type": "bytes"
+                }
+              ],
+              "name": "addAnchor",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -9,15 +9,14 @@ import AuthService from '../service/auth.service';
 import validateEnv from '../util/validateEnv';
 import dotenv from 'dotenv';
 import HttpApp from '../http-app';
-import { INGEST_PATH, ADMIN_PATH, NEAR_PATH, USER_PATH} from '../util/common';
+import { INGEST_PATH, ADMIN_PATH, ANCHOR_PATH } from '../util/common';
 import Mongo from "../mongo";
 import IProvider from '../interface/provider.interface';
 import IAtmos from '../interface/atmos.interface';
 import IPoint from '../interface/point.interface';
 import IMetadata from '../interface/metadata.interface';
 import IMeasurement from '../interface/measurement.interface';
-import INearQueryParams from '../interface/nearqueryparams.interface';
-import UserController from '../controller/user.controller';
+import IAnchor from '../interface/anchor.interface';
 import anchorModel from '../model/anchor.model';
 
 process.env.NODE_ENV = 'test';
@@ -34,13 +33,11 @@ let provider;
 export const app = new HttpApp(
   [
     new AdminController(),
-    new UserController(),
   ],
 );
 
 const testprovider: IProvider = { name: 'Test Provider', path: '4818b0' };
 const ADMIN_API = `http://localhost:3000/api/${ADMIN_PATH}`;
-const USER_API = `http://localhost:3000/api/${USER_PATH}`;
 
 describe('Users', () => {
   before(done => {
@@ -71,7 +68,7 @@ describe('Users', () => {
 
   describe('POST/admin/${INGEST_PATH}/data', () => {
 
-    it('should return AccessedDeniedException with user role, then create 1 geots with admin role', async () => {
+    it('should create and anchor 1 geots with admin role', async () => {
       await providerModel.create(testprovider)
         .then(() => {
           console.log(
@@ -80,10 +77,6 @@ describe('Users', () => {
         })
         .catch((error: string) => { console.log(error); });
       provider = await providerModel.findOne({ name: testprovider.name });
-      const user = new userModel({ username: 'User', email: 'user@example.com', password: 'mypass1', roles: [authService.roleUser], provider: provider });
-      await user.save();
-      const token = authService.createToken(user);
-
       // create sample data
       const point: IPoint = { type: 'Point', coordinates: [-73.91320, 40.68405] };
       const metadata: IMetadata = { model: 'mri-esm2-ssp126', project_id: 'proj_29lo8RFQiVowh4u5WHdbFSLKExL', source: 'station xxxxx' }
@@ -96,11 +89,6 @@ describe('Users', () => {
         measurements: [m1, m2],
       };
 
-      // post to ingest endpoint
-      let res = await request(ADMIN_API).post(`/${INGEST_PATH}`).set({ 'x-access-token': [token.token] }).send(atmos);
-      expect(res.status).to.equal(403);
-      expect(res.body.message).to.equal('Access denied');
-
       const admin = new userModel({
         username: 'admin', email: 'admin@example.com', password: 'admin',
         roles: [authService.roleUser, authService.roleAdmin], provider: provider
@@ -108,22 +96,20 @@ describe('Users', () => {
       await admin.save();
 
       const adminToken = authService.createToken(admin);
-      res = await request(ADMIN_API).post(`/${INGEST_PATH}`).set({ 'x-access-token': [adminToken.token] }).send(atmos);
+      // post to ingest endpoint
+      let res = await request(ADMIN_API).post(`/${INGEST_PATH}`).set({ 'x-access-token': [adminToken.token] }).send(atmos);
       expect(res.status).to.equal(200);
 
       const createdData: IAtmos = res.body.geots;
       expect(createdData.ts).to.equal(atmos.ts.toISOString());
 
-      // geospatial query for data
-      const params: INearQueryParams = { "lon": -73.913, "lat": 40.684, "min": 0, "max": 10000 };
-      res = await request(USER_API).get(`/${NEAR_PATH}`).set({ 'x-access-token': [adminToken.token] }).query(params);
+      // anchor endpoint creates a new anchor, creates a hash summary of geots data,
+      // and saves it to both the database anchor and the CELO contract
+      res = await request(ADMIN_API).post(`/${ANCHOR_PATH}`).set({ 'x-access-token': [adminToken.token] }).send({ limit: 100 });
       expect(res.status).to.equal(200);
-
-      const queryResponse: IAtmos[] = res.body;
-      expect(queryResponse[0].ts).to.equal(createdData.ts);
-      expect(queryResponse[0].measurements[0].value).to.equal(m1.value);
-      expect(queryResponse[0].measurements[1].value).to.equal(m2.value);
-      expect(queryResponse[0].hash.length).to.equal(64);
+      const anchorResponse: IAnchor = res.body.anchor;
+      expect(anchorResponse.hash.length).to.equal(64);
+      expect(anchorResponse.count).to.equal(1);
     });
   })
 });

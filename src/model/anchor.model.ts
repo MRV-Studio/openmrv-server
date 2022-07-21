@@ -13,9 +13,11 @@ const anchorSchema: mongoose.Schema<IAnchor> = new mongoose.Schema(
       ref: "Provider",
     },
     hash: { type: String },
-    transaction_id: {
+    transaction_hash: {
       type: String,
+      default: 'unhashed',
     },
+    count: {type: Number, default: 0},
   },
   {
     toJSON: {
