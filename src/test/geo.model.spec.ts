@@ -12,7 +12,7 @@ import IPoint from '../interface/point.interface';
 import IMetadata from '../interface/metadata.interface';
 import geotsModel from '../model/geots.model';
 import IPolygon from '../interface/polygon.interface';
-import IMeasurement from '../interface/measurement.interface';
+import { IMeasurement, Measurement, Unit} from '../interface/measurement.interface';
 
 process.env.NODE_ENV = 'test';
 dotenv.config();
@@ -77,8 +77,8 @@ describe('Geo', () => {
       const test = await geopoly.save();
       expect(test.ts).to.equal(geopoly.ts);
 
-      const m1: IMeasurement = { type: 'Temperature', unit: 'Celsius', value: 20 };
-      const m2: IMeasurement = { type: 'Humidity', unit: 'Percent', value: 30 };
+      const m1: IMeasurement = { type: Measurement.Temperature, unit: Unit.Celsius, value: 20 };
+      const m2: IMeasurement = { type: Measurement.Humidity, unit: Unit.Percent, value: 30 };
       const geots = new geotsModel({
         metadata: metadata,
         provider: provider,

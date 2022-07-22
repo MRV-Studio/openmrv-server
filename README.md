@@ -1,7 +1,7 @@
 # openmrv-server
 ![diagram](assets/diagram.png)
 ### Requirements 
-- [MongoDB v6 rc](https://www.mongodb.com/download-center/enterprise/releases/development) (local test instance)
+- [MongoDB v6](https://www.mongodb.com/docs/manual/administration/install-enterprise) (local test instance)
 - [MongoDB Atlas](https://www.mongodb.com/basics/mongodb-atlas-tutorial) (production)
 ### Nice to have 
 - [MongoDB Compass](https://www.mongodb.com/products/compass)

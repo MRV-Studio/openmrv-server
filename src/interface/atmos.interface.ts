@@ -1,7 +1,7 @@
 import IProvider from './provider.interface';
 import IMetadata from './metadata.interface';
 import IPoint from './point.interface';
-import IMeasurement from './measurement.interface';
+import { IMeasurement } from './measurement.interface';
 import IAnchor from './anchor.interface';
 
 interface IAtmos {

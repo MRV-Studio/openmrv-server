@@ -10,7 +10,7 @@ import IPoint from '../interface/point.interface';
 import IMetadata from '../interface/metadata.interface';
 import geotsModel from '../model/geots.model';
 import anchorModel from '../model/anchor.model';
-import IMeasurement from '../interface/measurement.interface';
+import { IMeasurement, Measurement, Unit} from '../interface/measurement.interface';
 import { nanoid } from 'nanoid';
 import { Keccak } from 'sha3'
 import IAtmos from '../interface/atmos.interface';
@@ -58,8 +58,8 @@ describe('Geo', () => {
       const metadata: IMetadata = { model: 'mri-esm2-ssp126', project_id: 'proj_29lo8RFQiVowh4u5WHdbFSLKExL', source: 'station xxxxx' };
       const point: IPoint = { type: 'Point', coordinates: [-73.91320, 40.68405] };
 
-      const m1: IMeasurement = { type: 'Temperature', unit: 'Celsius', value: 20 };
-      const m2: IMeasurement = { type: 'Humidity', unit: 'Percent', value: 30 };
+      const m1: IMeasurement = { type: Measurement.Temperature, unit: Unit.Celsius, value: 20 };
+      const m2: IMeasurement = { type: Measurement.Humidity, unit: Unit.Percent, value: 30 };
       const atmos: IAtmos = {
         _id: nanoid(),
         location: point,
@@ -72,7 +72,7 @@ describe('Geo', () => {
       const geots = await geotsModel.create(atmos);
       expect(geots.ts).to.equal(atmos.ts);
 
-      const m3: IMeasurement = { type: 'Pressure', unit: 'Inches', value: 29.96 };
+      const m3: IMeasurement = { type: Measurement.Pressure, unit: Unit.Inches, value: 29.96 };
       const atmos1: IAtmos = {
         _id: nanoid(),
         location: point,
